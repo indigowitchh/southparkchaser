@@ -23,7 +23,7 @@ room = 1
 #images and fonts
 kenny=pygame.image.load('kenny.png')
 font = pygame.font.Font('freesansbold.ttf', 32)
-text = font.render('DIFFICULTY:EASY', True, (200, 200, 0))
+text = font.render('DIFFICULTY:EASY', True, (253, 245, 226))
 
 LEFT=0
 RIGHT=1
