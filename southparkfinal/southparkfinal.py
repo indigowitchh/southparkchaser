@@ -1,4 +1,5 @@
 import pygame
+import random
 pygame.init()  
 pygame.display.set_caption("south park collect!")  # sets the window title
 screen = pygame.display.set_mode((1000, 800))  # creates game screen
@@ -18,6 +19,7 @@ keys = [False, False, False, False] #this list holds whether each key has been p
 timer = 0
 score = 0
 room = 1
+
 LEFT=0
 RIGHT=1
 UP=2
@@ -41,6 +43,46 @@ RowNum = 0 #for left animation, this will need to change for other animations
 frameNum = 0
 ticker = 0
 
+#class for characters------------------------------------------------------------------
+class Chase:
+    def __init__(self,xpos,ypos,direction,pic,velx,vely):
+        self.xpos = xpos
+        self.ypos = ypos
+        self.position = direction
+        self.Caught = False
+        self.pic = pic
+        self.vx = velx
+        self.vy = vely
+
+    def Chasing(self):
+        if timer % 50 == 0: #only change direction every 50 game loops
+            self.position = random.randrange(0, 4) #set random direction
+        if self.position == LEFT and self.xpos > 0:
+            self.position-=self.vx #move left
+        if self.position == RIGHT and self.xpos < 800:
+            self.position += self.vx #move right
+        if self.position == UP and self.ypos > 0: 
+            self.position +=self.vy #move up
+        if self.position == DOWN and self.ypos+50 < 800:
+            self.position -=self.vy #move down
+        return self.position
+
+    def Collide(PlayerX, PlayerY, charainfo):
+      if PlayerX+40 > charainfo:
+       if PlayerX < charainfo+40:
+           if PlayerY+40 >charainfo:
+               if PlayerY < charainfo+40:
+                   if charainfo == False: #only catch uncaught sheeps!
+                    charainfo = True #catch da sheepies!
+
+    def Draw(self,pic):
+        if self.Caught == False:
+            screen.blit(self.pic, (self.xpos, self.ypos))
+        
+ken = Chase(200,400,RIGHT,kenny,0.2,0.2)
+marsh = Chase(700,450,LEFT,stan,0.5,0.5)
+jersey = Chase(250,200,DOWN,kyle,3,3)
+eric = Chase(650,300,UP,cartman,5,5)
 
 #game loop------------------------------------------------------------------------------
 while not gameover:
@@ -121,6 +163,8 @@ while not gameover:
     else:
         vy=0
 
+    
+
     #UPDATE POSITION BASED ON VELOCITY
     xpos+=vx #update player xpos
     ypos+=vy #update player ypos
@@ -169,22 +213,26 @@ while not gameover:
     
     #rooms
     if room == 1: #kenny
-        screen.blit(kenny, (500, 500))
+        ken.Draw(kenny)
+        ken.Chasing()
         text = font.render('DIFFICULTY:EASY', True, (253, 245, 226))
         text2 = font.render('CATCH KENNY!', True, (255, 94, 5))
 
     if room == 2: #stan
-        screen.blit(stan,(600,600))
+        marsh.Draw(stan)
+        marsh.Chasing()
         text = font.render('DIFFICULTY:MILD', True, (210, 161, 140))
         text2 = font.render('CATCH STAN!', True, (27, 3, 163))
     
     if room == 3: #kyle
-        screen.blit(kyle,(400,400))
+        jersey.Draw(kyle)
+        jersey.Chasing()
         text = font.render('DIFFICULTY:MEDIUM', True, (165, 126, 110))
         text2 = font.render('CATCH KYLE!', True, (0, 128, 0))
 
     if room == 4: #cartman
-        screen.blit(cartman,(300,300))
+        eric.Draw(cartman)
+        eric.Chasing()
         text = font.render('DIFFICULTY:HARD', True, (75, 57, 50))
         text2 = font.render('CATCH ERIC!', True, (255, 0, 0))
 
