@@ -54,17 +54,17 @@ class Chase:
         self.vx = velx
         self.vy = vely
 
-    def Chasing(self):
-        if timer % 50 == 0: #only change direction every 50 game loops
+    def Chasing(self, timer):
+        if timer % 500 == 0: #only change direction every 50 game loops
             self.position = random.randrange(0, 4) #set random direction
         if self.position == LEFT and self.xpos > 0:
-            self.position-=self.vx #move left
-        if self.position == RIGHT and self.xpos < 800:
-            self.position += self.vx #move right
+            self.xpos-=self.vx #move left
+        if self.position == RIGHT and self.xpos+100 < 800:
+            self.xpos += self.vx #move right
         if self.position == UP and self.ypos > 0: 
-            self.position +=self.vy #move up
-        if self.position == DOWN and self.ypos+50 < 800:
-            self.position -=self.vy #move down
+            self.ypos +=self.vy #move up
+        if self.position == DOWN and self.ypos+100 < 800:
+            self.ypos -=self.vy #move down
         return self.position
 
     def Collide(PlayerX, PlayerY, charainfo):
@@ -79,10 +79,10 @@ class Chase:
         if self.Caught == False:
             screen.blit(self.pic, (self.xpos, self.ypos))
         
-ken = Chase(200,400,RIGHT,kenny,0.2,0.2)
-marsh = Chase(700,450,LEFT,stan,0.5,0.5)
-jersey = Chase(250,200,DOWN,kyle,3,3)
-eric = Chase(650,300,UP,cartman,5,5)
+ken = Chase(200,400,RIGHT,kenny,5,5)
+marsh = Chase(700,450,LEFT,stan,10,10)
+jersey = Chase(250,200,DOWN,kyle,12,12)
+eric = Chase(650,300,UP,cartman,25,25)
 
 #game loop------------------------------------------------------------------------------
 while not gameover:
@@ -214,25 +214,25 @@ while not gameover:
     #rooms
     if room == 1: #kenny
         ken.Draw(kenny)
-        ken.Chasing()
+        ken.Chasing(500)
         text = font.render('DIFFICULTY:EASY', True, (253, 245, 226))
         text2 = font.render('CATCH KENNY!', True, (255, 94, 5))
 
     if room == 2: #stan
         marsh.Draw(stan)
-        marsh.Chasing()
+        marsh.Chasing(1000)
         text = font.render('DIFFICULTY:MILD', True, (210, 161, 140))
         text2 = font.render('CATCH STAN!', True, (27, 3, 163))
     
     if room == 3: #kyle
         jersey.Draw(kyle)
-        jersey.Chasing()
+        jersey.Chasing(5000)
         text = font.render('DIFFICULTY:MEDIUM', True, (165, 126, 110))
         text2 = font.render('CATCH KYLE!', True, (0, 128, 0))
 
     if room == 4: #cartman
         eric.Draw(cartman)
-        eric.Chasing()
+        eric.Chasing(10000)
         text = font.render('DIFFICULTY:HARD', True, (75, 57, 50))
         text2 = font.render('CATCH ERIC!', True, (255, 0, 0))
 
