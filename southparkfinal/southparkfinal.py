@@ -43,50 +43,63 @@ RowNum = 0 #for left animation, this will need to change for other animations
 frameNum = 0
 ticker = 0
 
+
 #class for characters------------------------------------------------------------------
 class Chase:
-    def __init__(self,xpos,ypos,direction,pic,velx,vely):
+    def __init__(self,xpos,ypos,direction,pic,velx,vely,isCaught):
         self.xpos = xpos
         self.ypos = ypos
         self.position = direction
-        self.Caught = False
+        self.Caught = isCaught
         self.pic = pic
         self.vx = velx
         self.vy = vely
 
-    def Chasing(self, timer):
-        if timer % 500 == 0: #only change direction every 50 game loops
-            self.position = random.randrange(0, 4) #set random direction
-        if self.position == LEFT and self.xpos > 0:
-            self.xpos-=self.vx #move left
-        if self.position == RIGHT and self.xpos+100 < 800:
-            self.xpos += self.vx #move right
-        if self.position == UP and self.ypos > 0: 
-            self.ypos +=self.vy #move up
-        if self.position == DOWN and self.ypos+100 < 800:
-            self.ypos -=self.vy #move down
-        return self.position
+    def Chasing(self):
 
-    def Collide(PlayerX, PlayerY, charainfo):
-      if PlayerX+40 > charainfo:
-       if PlayerX < charainfo+40:
-           if PlayerY+40 >charainfo:
-               if PlayerY < charainfo+40:
-                   if charainfo == False: #only catch uncaught sheeps!
-                    charainfo = True #catch da sheepies!
+        if timer % 30== 0: #only change direction every 50 game loops
+            self.position = random.randrange(0, 4) #set random direction
+        if self.position == LEFT:
+            self.xpos-=self.vx #move left
+        elif self.position == RIGHT :
+            self.xpos += self.vx #move right
+        elif self.position == UP : 
+            self.ypos +=self.vy #move up
+        elif self.position == DOWN :
+            self.ypos -=self.vy #move down
+
+        if self.xpos +100 >1000:
+            self.position = LEFT
+        elif self.xpos <0:
+            self.position = RIGHT
+        elif self.ypos+100 > 800:
+            self.position = DOWN
+        elif self.ypos < 0:
+            self.position = UP
+            
+        return self.xpos and  self.ypos
+
+    def Collide(self, PlayerX, PlayerY):
+      if PlayerX+170 > self.xpos:
+       if PlayerX < self.xpos+50:
+           if PlayerY+175 >self.ypos:
+               if PlayerY < self.ypos+50:
+                   if self.Caught == False: #only catch uncaught sheeps!
+                    self.Caught = True #catch da sheepies!
 
     def Draw(self,pic):
         if self.Caught == False:
             screen.blit(self.pic, (self.xpos, self.ypos))
         
-ken = Chase(200,400,RIGHT,kenny,5,5)
-marsh = Chase(700,450,LEFT,stan,10,10)
-jersey = Chase(250,200,DOWN,kyle,12,12)
-eric = Chase(650,300,UP,cartman,25,25)
+ken = Chase(200,400,RIGHT,kenny,50,20, False)
+marsh = Chase(700,450,LEFT,stan,18,18, False)
+jersey = Chase(250,200,DOWN,kyle,50,15, False)
+eric = Chase(650,300,UP,cartman,15,15, False)
 
 #game loop------------------------------------------------------------------------------
 while not gameover:
     clock.tick(60) #FPS
+    timer+=1
     
     for event in pygame.event.get(): #quit game if x is pressed in top corner
         if event.type == pygame.QUIT:
@@ -145,20 +158,20 @@ while not gameover:
 #physics-------------------------------------------------------
     #LEFT MOVEMENT
     if keys[LEFT]==True:
-        vx=-3
+        vx=-2
         direction = 0
     #RIGHT MOVEMENT
     elif keys[RIGHT] == True:
-        vx = 3
+        vx = 2
     #turn off velocity
     else:
         vx = 0
     #UP MOVEMENT
     if keys[DOWN]==True:
-         vy=3
+         vy=2
     #RIGHT MOVEMENT
     elif keys[UP]==True:
-        vy=-3
+        vy=-2
     #turn off velocity
     else:
         vy=0
@@ -214,25 +227,29 @@ while not gameover:
     #rooms
     if room == 1: #kenny
         ken.Draw(kenny)
-        ken.Chasing(500)
+        ken.Chasing()
+        ken.Collide(xpos,ypos)
         text = font.render('DIFFICULTY:EASY', True, (253, 245, 226))
         text2 = font.render('CATCH KENNY!', True, (255, 94, 5))
 
     if room == 2: #stan
         marsh.Draw(stan)
-        marsh.Chasing(1000)
+        marsh.Chasing()
+        marsh.Collide(xpos,ypos)
         text = font.render('DIFFICULTY:MILD', True, (210, 161, 140))
         text2 = font.render('CATCH STAN!', True, (27, 3, 163))
     
     if room == 3: #kyle
         jersey.Draw(kyle)
-        jersey.Chasing(5000)
+        jersey.Chasing()
+        jersey.Collide(xpos,ypos)
         text = font.render('DIFFICULTY:MEDIUM', True, (165, 126, 110))
         text2 = font.render('CATCH KYLE!', True, (0, 128, 0))
 
     if room == 4: #cartman
         eric.Draw(cartman)
-        eric.Chasing(10000)
+        eric.Chasing()
+        eric.Collide(xpos,ypos)
         text = font.render('DIFFICULTY:HARD', True, (75, 57, 50))
         text2 = font.render('CATCH ERIC!', True, (255, 0, 0))
 
