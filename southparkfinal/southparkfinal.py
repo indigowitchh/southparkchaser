@@ -1,3 +1,4 @@
+
 import pygame
 import random
 pygame.init()  
@@ -35,6 +36,12 @@ background = pygame.image.load('background.jpg')
 font = pygame.font.Font('freesansbold.ttf', 32)
 text = font.render('DIFFICULTY:EASY', True, (255, 195, 170))
 text2 = font.render('CATCH KENNY!', True, (255, 94, 5))
+
+
+#sound---------------------------------------------------------------------
+caught = pygame.mixer.Sound('prettygood.mp3')
+soundtrack = pygame.mixer.music.load('elevator.mp3')
+pygame.mixer.music.play(-1)
 
 #animation variables
 frameWidth = 170
@@ -85,7 +92,8 @@ class Chase:
            if PlayerY+175 >self.ypos:
                if PlayerY < self.ypos+50:
                    if self.Caught == False: #only catch uncaught sheeps!
-                    self.Caught = True #catch da sheepies!
+                       pygame.mixer.Sound.play(caught)
+                   self.Caught = True #catch da sheepies!
 
     def Draw(self,pic):
         if self.Caught == False:
@@ -235,7 +243,7 @@ while not gameover:
     if room == 2: #stan
         marsh.Draw(stan)
         marsh.Chasing()
-        marsh.Collide(xpos,ypos)
+        marsh.Collide(xpos,ypos) 
         text = font.render('DIFFICULTY:MILD', True, (210, 161, 140))
         text2 = font.render('CATCH STAN!', True, (27, 3, 163))
     
