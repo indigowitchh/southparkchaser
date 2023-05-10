@@ -37,10 +37,12 @@ kenny=pygame.image.load('kenny.png')
 stan=pygame.image.load('stan.png')
 kyle= pygame.image.load('kyle.png')
 cartman = pygame.image.load('cartman.png')
-
 background = pygame.image.load('background.jpg')
 font = pygame.font.Font('freesansbold.ttf', 32)
 ending = pygame.image.load('ending.jpg')
+
+
+
 text = font.render('DIFFICULTY:EASY', True, (255, 195, 170))
 text1 = font.render('SCORE:', True, (0,0,0))
 textuh = font.render(str(score), True, (0,0,0))
@@ -48,10 +50,12 @@ text2 = font.render('CATCH KENNY!', True, (255, 94, 5))
 text3 = font.render('WELCOME TO SOUTH PARK CHASER', True,(0,139,139))
 text4 = font.render('Press space to start!', True,(102,205,170))
 text5= font.render('Use keyboard arrows to move!', True,(95,158,160))
+instruct = font.render('Collect the main 4 to win!', True,(95,158,160))
 text6 = font.render('OH, HAMBURGERS! YOU DID IT!!!', True,(95,158,160))
 
 #sound---------------------------------------------------------------------
 caught = pygame.mixer.Sound('prettygood.mp3')
+celebrate = pygame.mixer.Sound('yay.mp3')
 soundtrack = pygame.mixer.music.load('elevator.mp3')
 pygame.mixer.music.play(-1)
 
@@ -255,13 +259,15 @@ while not gameover:
 
 
     if states == "B":
-        screen.blit(text3,(200,200)) #add third text
-        screen.blit(text4,(350,400)) #add fourth text
-        screen.blit(text5,(300,600))
+        screen.blit(text3,(200,100)) #add third text
+        screen.blit(text4,(320,250)) #add fourth text
+        screen.blit(text5,(260,400))
+        screen.blit(instruct,(300,550))
+
         text3 = font.render('WELCOME TO SOUTH PARK CHASER', True,(0,139,139))
         text4 = font.render('Press space to start!', True,(102,205,170))
         text5= font.render('Use keyboard arrows to move!', True,(95,158,160))
-
+        instruct = font.render('Collect the main 4 to win!', True,(32,178,170))
 
     if states == "M":
         screen.blit(background,(0,0)) #add background
@@ -273,11 +279,12 @@ while not gameover:
 
 
     if states == "E":
-
+        
         xpos = 400
         ypos = 600
         screen.blit(text6,(200,600))
         screen.blit(ending,(0,0))
+        pygame.mixer.Sound.play(celebrate)
 
     if gainscore == True:
         score += 1
@@ -326,8 +333,6 @@ while not gameover:
         text1 = font.render('SCORE:', True, (0,0,0))
         textuh = font.render(str(score), True, (0,0,0))
 
-    #if room == 5: #outro
-       #states = "E"
 
 
     pygame.display.flip()#this actually puts the pixel on the screen
