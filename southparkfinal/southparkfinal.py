@@ -9,14 +9,14 @@ clock = pygame.time.Clock() #set up clock
 gameover = False #variable to run our game loop
 
 
-#player variables
+#player variables------------------------------------------------------------------
 xpos = 100 #xpos of player
 ypos = 765-232 #ypos of player
 vx = 0 #x velocity of player
 vy=0 #y velocity of player
 keys = [False, False, False, False, False, False] #this list holds whether each key has been pressed
 
-#game variables
+#game variables--------------------------------------------------------------------
 timer = 0
 score = 0
 gainscore = False
@@ -31,7 +31,7 @@ SPACE=4
 states = ["B","M","E"]
 states = "B"
 
-#images and fonts
+#images-----------------------------------------------------------------------------
 butters = pygame.image.load('butters.png') #load your spritesheet
 kenny=pygame.image.load('kenny.png')
 stan=pygame.image.load('stan.png')
@@ -42,7 +42,7 @@ font = pygame.font.Font('freesansbold.ttf', 32)
 ending = pygame.image.load('ending.jpg')
 
 
-
+#fonts-----------------------------------------------------------------------------
 text = font.render('DIFFICULTY:EASY', True, (255, 195, 170))
 text1 = font.render('SCORE:', True, (0,0,0))
 textuh = font.render(str(score), True, (0,0,0))
@@ -118,6 +118,8 @@ class Chase:
         if self.Caught == False:
             screen.blit(self.pic, (self.xpos, self.ypos))
         
+
+#instantiate the characters------------------------------------------------------------
 ken = Chase(200,400,RIGHT,kenny,50,20, False)
 marsh = Chase(700,450,LEFT,stan,18,18, False)
 jersey = Chase(250,200,DOWN,kyle,50,15, False)
@@ -155,7 +157,8 @@ while not gameover:
                 keys[UP] = False
             elif event.key == pygame.K_SPACE:
                 keys[SPACE] = False
-#changing the rooms based on the players position
+
+#changing the rooms based on the players position and input--------------------------------------
         if score ==4 and room == 4:
             states = "E"
         if keys[SPACE] == True and room == 0:
@@ -181,7 +184,7 @@ while not gameover:
             xpos = 700
        
         
-        #dont go past screen proportions
+#dont go past screen boundaries-------------------------------------
         if xpos < 0 and room ==0:
             xpos = 10
             print("Out of bounds!")
@@ -191,7 +194,8 @@ while not gameover:
         if ypos >800-175:
             ypos = 800-175
             print("Out of bounds!")
-#physics-------------------------------------------------------
+
+#physics-----------------------------------------------------------
     #LEFT MOVEMENT
     if keys[LEFT]==True:
         vx=-2
@@ -213,15 +217,12 @@ while not gameover:
         vy=0
 
     
-
-    #UPDATE POSITION BASED ON VELOCITY
+#UPDATE POSITION BASED ON VELOCITY
     xpos+=vx #update player xpos
     ypos+=vy #update player ypos
         
-    #ANIMATION-------------------------------------------------------------------
-        
-    # Update Animation Information
-    
+
+#ANIMATION-------------------------------------------------------------------
     if vx < 0: #left animation
         RowNum = 2
         ticker+=1
@@ -252,15 +253,15 @@ while not gameover:
         if frameNum>2: 
            frameNum = 0
   
-    # RENDER--------------------------------------------------------------------------------
-    # Once we've figured out what frame we're on and where we are, time to render.
+# RENDER--------------------------------------------------------------------------------
     screen.fill((255,255,255)) #wipe screen so it doesn't smear  
     screen.blit(butters, (xpos, ypos), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight))
 
 
-    if states == "B":
-        screen.blit(text3,(200,100)) #add third text
-        screen.blit(text4,(320,250)) #add fourth text
+#Different states of the game-----------------------------------------------------------
+    if states == "B": #intro
+        screen.blit(text3,(200,100)) 
+        screen.blit(text4,(320,250)) 
         screen.blit(text5,(260,400))
         screen.blit(instruct,(300,550))
 
@@ -269,28 +270,27 @@ while not gameover:
         text5= font.render('Use keyboard arrows to move!', True,(95,158,160))
         instruct = font.render('Collect the main 4 to win!', True,(32,178,170))
 
-    if states == "M":
-        screen.blit(background,(0,0)) #add background
+    if states == "M": #map and gameplay
+        screen.blit(background,(0,0)) 
         screen.blit(butters, (xpos, ypos), (frameWidth*frameNum, RowNum*frameHeight, frameWidth, frameHeight))
-        screen.blit(text, (20, 20)) #add first text
-        screen.blit(text2, (750,20)) #add second text
+        screen.blit(text, (20, 20)) 
+        screen.blit(text2, (750,20)) 
         screen.blit(text1,(400,40))
         screen.blit(textuh,(545,40))
 
-
-    if states == "E":
-        
+    if states == "E": #outro
         xpos = 400
         ypos = 600
         screen.blit(text6,(200,600))
         screen.blit(ending,(0,0))
         pygame.mixer.Sound.play(celebrate)
 
+#keeps track of score------
     if gainscore == True:
         score += 1
         gainscore = False
 
-    #rooms
+#rooms----------------------------------------------------------------------------
     if room == 0: #intro
         states = "B"
 
@@ -303,7 +303,6 @@ while not gameover:
         text1 = font.render('SCORE:', True, (0,0,0))
         textuh = font.render(str(score), True, (0,0,0))
 
-
     if room == 2: #stan
         marsh.Draw(stan)
         marsh.Chasing()
@@ -313,7 +312,6 @@ while not gameover:
         text1 = font.render('SCORE:', True, (0,0,0))
         textuh = font.render(str(score), True, (0,0,0))
 
-
     if room == 3: #kyle
         jersey.Draw(kyle)
         jersey.Chasing()
@@ -322,7 +320,6 @@ while not gameover:
         text2 = font.render('CATCH KYLE!', True, (0, 128, 0))
         text1 = font.render('SCORE:', True, (0,0,0))
         textuh = font.render(str(score), True, (0,0,0))
-
 
     if room == 4: #cartman
         eric.Draw(cartman)
@@ -334,8 +331,7 @@ while not gameover:
         textuh = font.render(str(score), True, (0,0,0))
 
 
-
-    pygame.display.flip()#this actually puts the pixel on the screen
+    pygame.display.flip()#puts the pixel on the screen
     
 #end game loop------------------------------------------------------------------------------
 pygame.quit()
